@@ -43,5 +43,5 @@ class CustomerRepo:
         self.session.commit()
         return CustomerOutputs.from_orm(row)
 
-    def get_by_name(self, customer_name: str) -> CustomerOutputs:
+    def get_by_name(self, customer_name: str) -> CustomerOutputs | None:
         return self.session.query(CustomerSchema).filter(CustomerSchema.customer_name == customer_name).first()
