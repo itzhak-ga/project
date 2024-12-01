@@ -1,8 +1,8 @@
 from typing import Iterable
 
 import uvicorn
-from fastapi import FastAPI, Depends, HTTPException, Request, APIRouter
-from config import get_customer_repo
+from fastapi import FastAPI, Depends, Request, APIRouter
+from config import get_customer_repo, exception_handler
 from models import CustomerInputs, CustomerOutputs
 from repository import CustomerRepo
 from celery_app import my_task
@@ -18,11 +18,9 @@ def get_customers(customer_repo: CustomerRepo = Depends(get_customer_repo)):
 
 
 @router.post("/create", response_model=CustomerOutputs)
+@exception_handler
 def create_customer(new_customer: CustomerInputs, request: Request,
                  customer_repo: CustomerRepo = Depends(get_customer_repo)):
-    if customer_repo.get_by_name(new_customer.customer_name):
-        raise HTTPException(status_code=400, detail="Customer with this name already exists.")
-
     customer_created = customer_repo.create(new_customer, user_agent=request.headers.get("user-agent"),
                                             endpoint_name=create_customer.__name__)
 
