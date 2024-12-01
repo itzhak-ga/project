@@ -13,7 +13,7 @@ class CustomerSchema(Base):
     __tablename__ = 'customers'
     id = Column(Integer, primary_key=True, index=True)
     customer_id = Column(String(244), nullable=False, index=True)
-    customer_name = Column(String(244), nullable=False)
+    customer_name = Column(String(244), unique=True, nullable=False)
     last_created = Column(DateTime, default=datetime.now)
     last_modified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     user_agent = Column(String, nullable=False)
